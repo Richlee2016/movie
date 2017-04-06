@@ -82,24 +82,7 @@
 
                     },
                     searchGo() {
-                        // axios.post('/movie/search', {
-                        //         key: this.keyword
-                        //     })
-                        //     .then(res => {
-                        //         this.searchMovies = res.data;
-                        //         console.log(res.data);
-                        //     })
-                        //     .catch(err => {
-                        //         console.log(err);
-                        //     })
-                        axios.get('/movie/test')
-                            .then(res => {
-                                // this.searchMovies = res.data;
-                                console.log(res.data);
-                            })
-                            .catch(err => {
-                                console.log(err);
-                            })
+                       
                     },
                     signUp() {
                         axios.post('/api/users/signup', {
