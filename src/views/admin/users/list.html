@@ -1,0 +1,55 @@
+<%- include('../layout/header') -%>
+    <h1 class="display-4">List</h1>
+    <div class="movie-list" id="list">
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>用户名</th>
+                    <th>录入时间</th>
+                    <th>查看</th>
+                    <th>更新</th>
+                    <th>删除</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr v-for="(item,index) in list">
+                    <td>{{item.username}}</td>
+                    <td>{{ item.createTime}}</td>
+                    <td><a class="btn btn-link">查看</a></td>
+                    <td><a class="btn btn-link">修改</a></td>
+                    <td><button class="btn btn-danger">删除</button></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <%- include('../layout/footer') -%>
+        <script>
+            var List = new Vue({
+                el: '#list',
+                data: {
+                    list: []
+                },
+                methods: {
+                    del(id, i) {
+                        this.list.splice(i, 1);
+                        axios.delete('/admin/movie/list/delete/' + id)
+                            .then(res => {
+                                alert(res.data.msg);
+                            })
+                            .catch(err => {
+                                console.log(err)
+                            })
+                    }
+                },
+                mounted() {
+                    axios.get('/api/users/list')
+                        .then(res => {
+                            console.log(res);
+                            this.list = res.data.results;
+                        })
+                        .catch(err => {
+                            console.log(err);
+                        });
+                }
+            });
+        </script>
