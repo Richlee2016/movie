@@ -1,0 +1,10 @@
+{
+    "eol": "\n",
+    "e4x": true,
+    "js": {
+        "end_with_newline": true
+    },
+    "html": {
+        "extra_liners": []
+    }
+}
