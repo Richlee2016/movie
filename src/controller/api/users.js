@@ -53,5 +53,4 @@ exports.signUp = (req, res, next) => {
     } catch (error) {
         console.log(error);
     }
-
 };

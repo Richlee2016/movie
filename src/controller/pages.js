@@ -1,12 +1,12 @@
 /* GET home page. */
 /* index */
 exports.index = function(req, res, next) {
-    res.render('index/index', { title: 'Express' });
+    res.render('home/index', { title: 'Express' });
 };
 
 //favorite
 exports.favorite = function(req, res, next) {
-    res.render('index/movie/movie', { title: 'Express' });
+    res.render('home/movie/movie', { title: 'Express' });
 };
 
 
