@@ -18,6 +18,9 @@ router.post('/api/users/signin', apiUser.signIn); //登录
 router.post('/api/users/signup', apiUser.signUp); //注册
 
 //movies
-router.post('/api/movies/search', apiMovie.movieSearch);
+// router.post('/api/movies/search', apiMovie.movieSearch);
 
+//test
+router.get('/book', apiMovie.book);
+router.get('/read/:id', apiMovie.read);
 module.exports = router;

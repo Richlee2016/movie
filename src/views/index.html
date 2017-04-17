@@ -1,11 +1,46 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title><%= title %></title>
+
+<head>
+    <title>
+        <%= title %>
+    </title>
+    <meta http-equiv=”Content-Type” content=”text/html; charset=utf8″>
     <link rel='stylesheet' href='/stylesheets/style.css' />
-  </head>
-  <body>
-    <h1><%= title %></h1>
-    <p>Welcome to <%= title %></p>
-  </body>
+    <script src='/javascripts/vue.min.js'></script>
+    <script src='/javascripts/axios.js'></script>
+</head>
+
+<body>
+    <div id="chapter">
+        <ul>
+            <li v-for="item in chapter">
+                <a @click="read(item.href)">{{item.text}}</a>
+            </li>
+        </ul>
+        <p>{{book}}</p>
+    </div>
+</body>
+
 </html>
+<script>
+    var Chapter = new Vue({
+        el: "#chapter",
+        data: {
+            chapter: JSON.parse('<%- JSON.stringify(data) %>'),
+            book: ""
+        },
+        methods: {
+            read(id) {
+                axios.get('/read/' + id)
+                    .then(res => {
+                        this.book = res.data.data;
+                        console.log(res);
+                    })
+            }
+        },
+        created() {
+            console.log(this.chapter);
+        }
+    });
+</script>
