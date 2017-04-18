@@ -6,10 +6,8 @@ const douban = 'https://api.douban.com';
 const config = {
     search: douban + '/v2/movie/search?q='
 }
-const textUTF8 = function(text) {
-        return unescape(text.replace(/&#x/g, '%u').replace(/;/g, '').replace(/%uA0/g, ' '));
-    }
-    //电影豆瓣查询(豆瓣信息查询,电影家园进行迅雷地址爬取)
+
+//电影豆瓣查询(豆瓣信息查询,电影家园进行迅雷地址爬取)
 exports.movieSearch = function(req, res, next) {
     let ctx = req.body;
     request({
