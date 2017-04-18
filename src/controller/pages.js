@@ -21,3 +21,7 @@ exports.favorite = function(req, res, next) {
 exports.adminUserList = function(req, res, next) {
     res.render('admin/users/list', { title: 'Express' });
 };
+
+exports.book = function(req, res, next) {
+    res.render('index', { title: 'Express' });
+};

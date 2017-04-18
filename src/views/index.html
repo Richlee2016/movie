@@ -13,12 +13,13 @@
 
 <body>
     <div id="chapter">
+        <button @click="going(item)" v-for="item in framks">{{item}}</button>
         <ul>
             <li v-for="item in chapter">
                 <a @click="read(item.href)">{{item.text}}</a>
             </li>
         </ul>
-        <p>{{book}}</p>
+        <p v-for="item in book">{{item}}</p>
     </div>
 </body>
 
@@ -27,8 +28,9 @@
     var Chapter = new Vue({
         el: "#chapter",
         data: {
-            chapter: JSON.parse('<%- JSON.stringify(data) %>'),
-            book: ""
+            chapter: [],
+            book: "",
+            framks: ["一念永恒", "盘龙", "儒道至圣"]
         },
         methods: {
             read(id) {
@@ -36,6 +38,12 @@
                     .then(res => {
                         this.book = res.data.data;
                         console.log(res);
+                    })
+            },
+            going(id) {
+                axios.get('/chapter/' + id)
+                    .then(res => {
+                        this.chapter = res.data.data;
                     })
             }
         },

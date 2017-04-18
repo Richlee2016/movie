@@ -26,21 +26,51 @@ exports.movieSearch = function(req, res, next) {
 };
 
 //电影收藏
-
-
 //小说free
 const prefix = 'http://www.23us.cc';
 var movieSrc = {
     search: 'http://zhannei.baidu.com/cse/search?s=1682272515249779940&entry=1&q=',
-    chapter: prefix + '/html/143/143021/',
-    text: prefix + '/html/143/143021/'
+    book: {},
+    chapter: [],
+    text: ""
 }
 
 //test
-exports.book = function(req, res, next) {
+exports.bookSearch = function(req, res, next) {
+    console.log(req.params);
     request({
             method: 'GET',
-            uri: movieSrc.chapter,
+            uri: movieSrc.search + encodeURI(req.params.id),
+            json: true
+        })
+        .then(data => {
+            var $ = cheerio.load(data);
+            var bookDom = $('.result-item').eq(0).find('.result-game-item-detail a');
+            var result = {
+                href: bookDom.attr('href'),
+                title: bookDom.attr('title')
+            }
+
+            if (req.params.id === result.title) {
+                req.book = result;
+                movieSrc.book = result;
+                // return Promise.resolve(result);
+            } else {
+                console.log('do not have this book');
+            };
+            next();
+        })
+        .catch(err => {
+            console.log(err);
+        })
+}
+
+
+exports.chapter = function(req, res, next) {
+    var href = req.book.href;
+    request({
+            method: 'GET',
+            uri: href,
             json: true
         })
         .then(data => {
@@ -52,7 +82,7 @@ exports.book = function(req, res, next) {
                     text: $(o).text()
                 }
             });
-            res.render('index', { data: chapter, title: "rich" });
+            res.json({ data: chapter });
         })
         .catch(err => {
             console.log(err);
@@ -62,16 +92,17 @@ exports.read = function(req, res, next) {
     var chapter = req.params.id;
     request({
             method: 'GET',
-            uri: movieSrc.text + chapter,
+            uri: movieSrc.book.href + chapter,
             json: true
         })
         .then(data => {
             var $ = cheerio.load(data);
             var text = $("#content").text();
-            res.json({ data: text });
+            var reg = /\S+/g;
+            var result = text.match(reg);
+            res.json({ data: result });
         })
         .catch(err => {
             console.log(err);
-            console.log('name');
         })
 };

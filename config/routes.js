@@ -21,6 +21,7 @@ router.post('/api/users/signup', apiUser.signUp); //注册
 // router.post('/api/movies/search', apiMovie.movieSearch);
 
 //test
-router.get('/book', apiMovie.book);
+router.get('/book', pages.book);
+router.get('/chapter/:id', apiMovie.bookSearch, apiMovie.chapter);
 router.get('/read/:id', apiMovie.read);
 module.exports = router;
