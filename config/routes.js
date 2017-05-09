@@ -16,7 +16,7 @@ router.get('/admin/users/list', pages.adminUserList); //admin user list page
 router.get('/api/users/list', apiUser.list); //列表
 router.post('/api/users/signin', apiUser.signIn); //登录
 router.post('/api/users/signup', apiUser.signUp); //注册
-
+router.get('/api/users/mymovie', require('./spiders.js').moviego); //注册
 //movies
 // router.post('/api/movies/search', apiMovie.movieSearch);
 
