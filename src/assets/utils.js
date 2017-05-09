@@ -1,5 +1,4 @@
 const iconv = require('iconv-lite');
-const BufferHelper = require('bufferhelper');
 
 const markReg = (str) => /\"(.*)\"/g.exec(str)[1];
 const encodeGbk = (str) => {
@@ -53,4 +52,8 @@ let decode = function(str) {
 }
 
 
-export { markReg, encodeGbk, chinese2Gb2312, encode, decode }
+module.exports = {
+    chinese2Gb2312:chinese2Gb2312,
+    encode:encode,
+    decode:decode
+}

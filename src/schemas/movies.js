@@ -1,14 +1,23 @@
 const mongoose = require('mongoose');
 
 const MovieSchema = new mongoose.Schema({
-    doctor: String,
-    title: String,
-    language: String,
-    country: String,
-    summary: String,
-    flash: String,
-    poster: String,
-    year: Number,
+    id:Number,
+    name:String,
+    score:Number,
+    url:Array,
+    classify:Array,
+    catalog:Array,
+    actor:Array,
+    director:Array,
+    year:Number,
+    details:{
+        area:String,
+        intro:String,
+        othername:String,
+        img:String,
+        total:Number,
+        imdb:String
+    },
     meta: {
         createAt: {
             type: Date,
@@ -27,7 +36,6 @@ MovieSchema.pre('save', function(next) {
     } else {
         this.meta.updateAt = Date.now();
     }
-
     next();
 })
 
