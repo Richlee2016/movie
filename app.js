@@ -10,7 +10,7 @@ var routes = require('./config/routes');
 
 var app = express();
 //爬取
-// spiders.movie();
+spiders.movie();
 
 app.all("*", function (req, res, next) {
   res.header('Access-Control-Allow-Origin', '*');

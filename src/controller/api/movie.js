@@ -1,4 +1,4 @@
-const Users = require('../../models/movies');
+const Movies = require('../../models/movies');
 const request = require('request-promise');
 const cheerio = require('cheerio');
 const douban = 'https://api.douban.com';
@@ -104,3 +104,11 @@ exports.read = function(req, res, next) {
             console.log(err);
         })
 };
+
+//list
+exports.movieList = function(req, res, next){
+    Movies.find({},function(err,list){
+        if(err) console.log(err);
+        res.json({list:list});
+    })
+}
