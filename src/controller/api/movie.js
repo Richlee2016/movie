@@ -9,10 +9,10 @@ const config = {
 
 //电影豆瓣查询(豆瓣信息查询,电影家园进行迅雷地址爬取)
 exports.movieSearch = function(req, res, next) {
-    let ctx = req.body;
+    // let ctx = req.body;
     request({
             method: 'GET',
-            uri: config.search + encodeURI(ctx.key),
+            uri: config.search + encodeURI('火鸟出击'),
             json: true
         })
         .then(data => {
@@ -23,92 +23,33 @@ exports.movieSearch = function(req, res, next) {
         })
 };
 
-//电影收藏
-//小说free
-const prefix = 'http://www.23us.cc';
-var movieSrc = {
-    search: 'http://zhannei.baidu.com/cse/search?s=1682272515249779940&entry=1&q=',
-    book: {},
-    chapter: [],
-    text: ""
-}
-
-//test
-exports.bookSearch = function(req, res, next) {
-    console.log(req.params);
-    request({
-            method: 'GET',
-            uri: movieSrc.search + encodeURI(req.params.id),
-            json: true
-        })
-        .then(data => {
-            var $ = cheerio.load(data);
-            var bookDom = $('.result-item').eq(0).find('.result-game-item-detail a');
-            var result = {
-                href: bookDom.attr('href'),
-                title: bookDom.attr('title')
-            }
-
-            if (req.params.id === result.title) {
-                req.book = result;
-                movieSrc.book = result;
-                // return Promise.resolve(result);
-            } else {
-                console.log('do not have this book');
-            };
-            next();
-        })
-        .catch(err => {
-            console.log(err);
-        })
-}
-
-
-exports.chapter = function(req, res, next) {
-    var href = req.book.href;
-    request({
-            method: 'GET',
-            uri: href,
-            json: true
-        })
-        .then(data => {
-            var $ = cheerio.load(data);
-            var chapterDom = $('.chapterlist dd a').get();
-            var chapter = chapterDom.map(function(o) {
-                return {
-                    href: $(o).attr('href'),
-                    text: $(o).text()
-                }
-            });
-            res.json({ data: chapter });
-        })
-        .catch(err => {
-            console.log(err);
-        })
-};
-exports.read = function(req, res, next) {
-    var chapter = req.params.id;
-    request({
-            method: 'GET',
-            uri: movieSrc.book.href + chapter,
-            json: true
-        })
-        .then(data => {
-            var $ = cheerio.load(data);
-            var text = $("#content").text();
-            var reg = /\S+/g;
-            var result = text.match(reg);
-            res.json({ data: result });
-        })
-        .catch(err => {
-            console.log(err);
-        })
-};
 
 //list
 exports.movieList = function(req, res, next){
-    Movies.find({},function(err,list){
-        if(err) console.log(err);
-        res.json({list:list});
+    let page = Number(req.query.page),
+        pageSize = Number(req.query.pageSize)
+    let skip = ( page - 1)*pageSize;
+    Movies.count({'name':{'$ne':'none'}})
+    .then( count => {
+        Movies.find({'name':{'$ne':'none'}}).limit(pageSize).skip(skip)
+        .then( list => {
+            console.log(count);
+            res.json({list:list,total:count});
+        })
+        .catch( err => {
+            console.log(err);
+        } )
     })
 }
+
+exports.movieRemove = function(req,res,next){
+    var id = req.body.id;
+    Movies.remove({_id:id},function(err,movie){
+        if(err) console.log(err);
+        if(movie){
+            console.log('delete');
+            res.json({msg:'OK'})
+        }
+    });
+};
+

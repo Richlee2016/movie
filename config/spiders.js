@@ -14,8 +14,10 @@ var getInfo = function(url) {
             if (err) {
                 reject(err);
             }
-            var $ = cheerio.load(res.text, { decodeEntities: false });
-            resolve($);
+            if(res){
+                var $ = cheerio.load(res.text, { decodeEntities: false });
+                resolve($);
+            };
         });
     })
 };
@@ -23,9 +25,10 @@ var getInfo = function(url) {
 // let num = 23273; //电视剧 完结 人民的名义
 // let num = 23419; //电视剧 未完结  
 // let num = 23057; //电影 
-let num = 1;
+let num = 14439;
 exports.movie = function(){
     function start(){
+        console.log(num);
         getInfo(movieUrl(num))
         .then( $ => {
             var main = $('#main');
@@ -36,6 +39,16 @@ exports.movie = function(){
                     name:'none'
                 });
             };
+
+            let isMovieSubject = main.find('.location a').get().map( o => $(o).text())[2];
+            if(isMovieSubject === '电影专题'){
+                console.log(num + ':电影专题');
+                return Promise.resolve({
+                    id:num,
+                    name:'subject'
+                })
+            };
+
             var info = $('.info ul li');
             //url 解析
             const getUrl = () => {
@@ -133,12 +146,20 @@ exports.movie = function(){
             _movie.save().then(data => {
                 setTimeout(function(){
                     num++;
-                    if(num < 50 ){
+                    if(num < 23477 ){
                         start();
                     };
-                },3000);
+                },5000);
             });
         })
+        .catch( err => {
+            if(err){
+                console.log('have err');
+                setTimeout(function(){
+                    start();
+                },8000)
+            };
+        } )
     }
     start();
 };

@@ -20,8 +20,10 @@ router.post('/api/users/signup', apiUser.signUp); //注册
 //movies
 // router.post('/api/movies/search', apiMovie.movieSearch);
 router.get('/api/movies/list', apiMovie.movieList);
+router.post('/api/movies/remove', apiMovie.movieRemove);
+router.get('/api/movies/search', apiMovie.movieSearch);
 //test
-router.get('/book', pages.book);
-router.get('/chapter/:id', apiMovie.bookSearch, apiMovie.chapter);
-router.get('/read/:id', apiMovie.read);
+// router.get('/book', pages.book);
+// router.get('/chapter/:id', apiMovie.bookSearch, apiMovie.chapter);
+// router.get('/read/:id', apiMovie.read);
 module.exports = router;
