@@ -1,54 +1,117 @@
-<!DOCTYPE html>
-<html>
-
-<head>
-    <title>
-        <%= title %>
-    </title>
-    <meta http-equiv=”Content-Type” content=”text/html; charset=utf8″>
-    <link rel='stylesheet' href='/stylesheets/style.css' />
-    <script src='/javascripts/vue.min.js'></script>
-    <script src='/javascripts/axios.js'></script>
-</head>
-
-<body>
-    <div id="chapter">
-        <button @click="going(item)" v-for="item in framks">{{item}}</button>
-        <ul>
-            <li v-for="item in chapter">
-                <a @click="read(item.href)">{{item.text}}</a>
+<%- include('./layout/header') -%>
+    <div id="index">
+        <h1>首页</h1>
+        <a href="/admin/list" class="btn">admin</a>
+        <div>
+            321
+            <form>
+                <fieldset class="form-group">
+                    <label for="exampleInputEmail1">用户名</label>
+                    <input type="text" v-model="sign.username" class="form-control" placeholder="用户名">
+                </fieldset>
+                <fieldset class="form-group">
+                    <label for="exampleInputEmail1">输入密码</label>
+                    <input type="text" v-model="sign.password" class="form-control" placeholder="密码">
+                </fieldset>
+                <fieldset class="form-group" v-if="isSignIn">
+                    <label for="exampleInputEmail1">再次输入密码</label>
+                    <input type="text" v-model="sign.repassword" class="form-control" placeholder="密码">
+                </fieldset>
+                <button type="button" class="btn btn-primary" @click="signUp" v-if="isSignIn">注册</button>
+                <button type="button" class="btn btn-primary" @click="signIn">登录</button>
+                <button type="button" class="btn btn-warning" @click="cancle">取消</button>
+            </form>
+            <span @click="isSignIn = !isSignIn" n>登录</span>
+            <label>丨</label>
+            <span @click="isSignIn = !isSignIn">注册</span>
+        </div>
+        <form>
+            <fieldset class="form-group">
+                <label for="exampleInputEmail1">搜索</label>
+                <input type="text" v-model="keyword" class="form-control" placeholder="输入搜索电影">
+            </fieldset>
+            <button type="button" class="btn btn-primary" @click="searchGo">搜索</button>
+        </form>
+        <ul class="search-end">
+            <li v-for="item in searchMovies">
+                <a :href="item.href">
+                    <span>{{item.score}}</span>
+                    <label>{{item.year}}</label>
+                    <img :src="item.cover">
+                </a>
             </li>
         </ul>
-        <p v-for="item in book">{{item}}</p>
     </div>
-</body>
+    <script>
+        var myShakeEvent = new Shake({
+            threshold: 10, // optional shake strength threshold
+            timeout: 1000 // optional, determines the frequency of event generation
+        });
+        myShakeEvent.start();
+        window.addEventListener('shake', shakeEventDidOccur, false);
 
-</html>
-<script>
-    var Chapter = new Vue({
-        el: "#chapter",
-        data: {
-            chapter: [],
-            book: "",
-            framks: ["一念永恒", "盘龙", "儒道至圣"]
-        },
-        methods: {
-            read(id) {
-                axios.get('/read/' + id)
-                    .then(res => {
-                        this.book = res.data.data;
-                        console.log(res);
-                    })
-            },
-            going(id) {
-                axios.get('/chapter/' + id)
-                    .then(res => {
-                        this.chapter = res.data.data;
-                    })
-            }
-        },
-        created() {
-            console.log(this.chapter);
+        //function to call when shake occurs
+        function shakeEventDidOccur() {
+
+            //put your own code here etc.
+            alert('shake!');
         }
-    });
-</script>
+    </script>
+    <%- include('./layout/footer') -%>
+        <script>
+            var box = new Vue({
+                el: "#index",
+                data: {
+                    sign: {
+                        username: "",
+                        password: "",
+                        repassword: ""
+                    },
+                    keyword: "",
+                    searchMovies: [],
+                    isSignIn: false,
+                    username: "",
+                    password: "",
+                    repassword: ""
+                },
+                methods: {
+                    submit() {
+
+                    },
+                    cancle() {
+
+                    },
+                    searchGo() {
+
+                    },
+                    signUp() {
+                        axios.post('/api/users/signup', {
+                                username: this.sign.username,
+                                password: this.sign.password
+                            })
+                            .then(res => {
+                                console.log(res);
+                            })
+                            .catch(err => {
+                                console.log(err);
+                            });
+                    },
+                    signIn() {
+                        axios.post('/api/users/signin', {
+                                username: this.sign.username,
+                                password: this.sign.password
+                            })
+                            .then(res => {
+                                if (res.data.msg === 'OK') {
+                                    localStorage.setItem('user', this.sign.username);
+                                    location.href = '/movie'
+                                };
+                                console.log(res);
+                            })
+                            .catch(err => {
+                                console.log(err);
+                            });
+                    }
+                }
+            });
+        </script>

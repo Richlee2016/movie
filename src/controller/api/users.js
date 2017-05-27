@@ -1,6 +1,15 @@
 const Users = require('../../models/user');
 
-/* GET home page. */
+//user  middle
+exports.isLoadin = (req, res, next) => {
+    let _user = req.session.user;
+    if (_user) {
+        res.json(true);
+    } else {
+        res.json(false);
+    };
+};
+
 
 //列表
 exports.list = (req, res, next) => {
@@ -22,7 +31,8 @@ exports.signIn = (req, res, next) => {
         }).then(user => {
             user.comparePassword(ctx.password).then(exist => {
                 if (exist) {
-                    res.json({ msg: "welcome rich's home" });
+                    req.session.user = user;
+                    res.json({ msg: 'OK' })
                 } else {
                     res.json({ msg: 'sorry your password is worng' });
                 };
@@ -54,3 +64,9 @@ exports.signUp = (req, res, next) => {
         console.log(error);
     }
 };
+
+/**退出 */
+exports.logout = (req, res, next) => {
+    delete req.session.user;
+    res.json({ msg: "OK" });
+}

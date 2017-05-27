@@ -51,9 +51,59 @@ let decode = function(str) {
     });
 }
 
+let doCookie = {
+    setCookie(name, value) {
+        var Days = 30;
+        var exp = new Date();
+        exp.setTime(exp.getTime() + Days * 24 * 60 * 60 * 1000);
+        document.cookie = name + "=" + escape(value) + ";expires=" + exp.toGMTString();
+    },
+    getCookie(name) {
+        var arr, reg = new RegExp("(^| )" + name + "=([^;]*)(;|$)");
+
+        if (arr = document.cookie.match(reg))
+
+            return unescape(arr[2]);
+        else
+            return null;
+    },
+    delCookie(name) {
+        var exp = new Date();
+        exp.setTime(exp.getTime() - 1);
+        var cval = getCookie(name);
+        if (cval != null)
+            document.cookie = name + "=" + cval + ";expires=" + exp.toGMTString();
+    },
+    time: {
+        setCookie(name, value, time) {
+            var strsec = getsec(time);
+            var exp = new Date();
+            exp.setTime(exp.getTime() + strsec * 1);
+            document.cookie = name + "=" + escape(value) + ";expires=" + exp.toGMTString();
+        },
+        getsec(str) {
+            var str1 = str.substring(1, str.length) * 1;
+            var str2 = str.substring(0, 1);
+            if (str2 == "s") {
+                return str1 * 1000;
+            } else if (str2 == "h") {
+                return str1 * 60 * 60 * 1000;
+            } else if (str2 == "d") {
+                return str1 * 24 * 60 * 60 * 1000;
+            }
+        }
+    }
+}
+
 
 module.exports = {
-    chinese2Gb2312:chinese2Gb2312,
-    encode:encode,
-    decode:decode
+    chinese2Gb2312: chinese2Gb2312,
+    encode: encode,
+    decode: decode,
+    setCookie: doCookie.doCookie,
+    getCookie: doCookie.getCookie,
+    delCookie: doCookie.delCookie,
+    setCookieTime: doCookie.time.setCookie,
+    getCookieTime: doCookie.time.getCookie
+
 }

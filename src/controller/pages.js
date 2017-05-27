@@ -1,27 +1,16 @@
 /* GET home page. */
 
+
+
 /* index */
 exports.index = function(req, res, next) {
-    res.render('home/index', { title: 'Express' });
-};
-
-//favorite
-exports.favorite = function(req, res, next) {
-    res.render('home/movie/movie', { title: 'Express' });
-};
-
-
-
-/* home */
-
-
-
-/* admin */
-//users
-exports.adminUserList = function(req, res, next) {
-    res.render('admin/users/list', { title: 'Express' });
-};
-
-exports.book = function(req, res, next) {
     res.render('index', { title: 'Express' });
+};
+
+
+//movie
+exports.movie = function(req, res, next) {
+    var _user = req.session.user;
+
+    res.render('movie/movie', { title: 'Express' });
 };

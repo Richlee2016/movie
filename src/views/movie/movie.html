@@ -12,6 +12,8 @@
         <ul class="search-end">
             <li></li>
         </ul>
+        <div><span style="color:blue">{{user?user : '请登录'}}</span></div>
+        <button @click="quit">退出</button>
     </div>
     <%- include('../layout/footer') -%>
         <script>
@@ -20,6 +22,7 @@
                 data: {
                     keyword: "",
                     searchMovies: [],
+                    user: false
                 },
                 methods: {
                     searchGo() {
@@ -32,7 +35,29 @@
                             .catch(err => {
                                 console.log(err);
                             });
+                    },
+                    _isLogin() {
+                        axios.get('/api/users/isLoadin')
+                            .then(res => {
+                                if (res.data) {
+                                    this.user = localStorage.getItem('user');
+                                } else {
+                                    localStorage.clear('user');
+                                    this.user = localStorage.getItem('user');
+                                };
+                            })
+                    },
+                    quit() {
+                        axios.get('/api/users/logout')
+                            .then(res => {
+                                if (res.data.msg === 'OK') {
+                                    this._isLogin();
+                                };
+                            })
                     }
+                },
+                created() {
+                    this._isLogin();
                 }
             });
         </script>

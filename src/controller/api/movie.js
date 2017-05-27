@@ -25,31 +25,30 @@ exports.movieSearch = function(req, res, next) {
 
 
 //list
-exports.movieList = function(req, res, next){
+exports.movieList = function(req, res, next) {
     let page = Number(req.query.page),
         pageSize = Number(req.query.pageSize)
-    let skip = ( page - 1)*pageSize;
-    Movies.count({'name':{'$ne':'none'}})
-    .then( count => {
-        Movies.find({'name':{'$ne':'none'}}).limit(pageSize).skip(skip)
-        .then( list => {
-            console.log(count);
-            res.json({list:list,total:count});
+    let skip = (page - 1) * pageSize;
+    Movies.count({ 'name': { '$ne': 'none' } })
+        .then(count => {
+            Movies.find({ 'name': { '$ne': 'none' } }).limit(pageSize).skip(skip)
+                .then(list => {
+                    console.log(count);
+                    res.json({ list: list, total: count });
+                })
+                .catch(err => {
+                    console.log(err);
+                })
         })
-        .catch( err => {
-            console.log(err);
-        } )
-    })
 }
 
-exports.movieRemove = function(req,res,next){
+exports.movieRemove = function(req, res, next) {
     var id = req.body.id;
-    Movies.remove({_id:id},function(err,movie){
-        if(err) console.log(err);
-        if(movie){
+    Movies.remove({ _id: id }, function(err, movie) {
+        if (err) console.log(err);
+        if (movie) {
             console.log('delete');
-            res.json({msg:'OK'})
+            res.json({ msg: 'OK' })
         }
     });
 };
-
