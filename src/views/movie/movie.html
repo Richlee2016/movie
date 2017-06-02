@@ -58,6 +58,12 @@
                 },
                 created() {
                     this._isLogin();
+
+                    //restful test
+                    axios.get('/api/tests')
+                        .then(res => {
+                            console.log(res)
+                        })
                 }
             });
         </script>

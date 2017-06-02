@@ -163,3 +163,36 @@ exports.movie = function() {
     }
     start();
 };
+
+let bookConfig = {
+    prifix(num) { return `http://www.23us.cc/html/169/${num}/` }
+}
+
+exports.book = function() {
+    request.get(bookConfig.prifix(1)).end(function(err, res) {
+        var $ = cheerio.load(res.text);
+        //名字
+        var nameDom = $('.bookinfo');
+        // let bookInfo = {
+        //     auth:nameDom.find('')
+        // }
+        //章节
+        var chapterDom = $('.chapterlist').children().get();
+        var chapter = chapterDom.map(function(o) {
+            let result = {};
+            if ($(o).find('a').get().length === 0) {
+                result = {
+                    href: 'chapter',
+                    text: $(o).text()
+                }
+            } else {
+                result = {
+                    href: $(o).find('a').attr('href'),
+                    text: $(o).text()
+                }
+            };
+            return result;
+        });
+        console.log(chapter);
+    });
+}

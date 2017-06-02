@@ -3,13 +3,13 @@ const Users = require('../../models/user');
 //user  middle
 exports.isLoadin = (req, res, next) => {
     let _user = req.session.user;
+    console.log(_user);
     if (_user) {
-        res.json(true);
+        res.json(_user.username);
     } else {
         res.json(false);
     };
 };
-
 
 //列表
 exports.list = (req, res, next) => {
